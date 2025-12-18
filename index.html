@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>易經八卦占卜 - 完整版</title>
+    <style>
+        :root {
+            --basic_color: #39ffe2;
+            --background_color: #0a1b18;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DFKai-SB', 'BiauKai', 'AR PL UKai TW', 'AR PL UKai HK', 'AR PL KaitiM GB', 'KaiTi', 'KaiTi_GB2312', 'TW\-Kai', serif;
+            /* 觸控優化 */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        html {
+            /* 平滑滾動 */
+            scroll-behavior: smooth;
+            /* 修正iOS Safari的滾動問題 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--background_color);
+            padding: 40px 20px;
+            overflow-x: hidden;
+            /* 修正iOS Safari的彈性滾動 */
+            -webkit-overflow-scrolling: touch;
+            /* 防止雙擊放大 */
+            touch-action: manipulation;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: var(--basic_color);
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 20px var(--basic_color);
+            letter-spacing: 0.3em;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.8rem;
+        }
+
+        .instructions-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--basic_color);
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(57, 255, 226, 0.3);
+            border-radius: 20px;
+            background: rgba(57, 255, 226, 0.05);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .instructions-toggle:hover {
+            background: rgba(57, 255, 226, 0.15);
+            border-color: rgba(57, 255, 226, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .instructions-toggle::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .instructions-toggle.active::after {
+            transform: rotate(180deg);
+        }
+
+        .instructions {
+            text-align: center;
+            color: var(--basic_color);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.5s ease;
+            background: rgba(57, 255, 226, 0.08);
+            border-radius: 15px;
+            border: 1px solid rgba(57, 255, 226, 0.3);
+        }
+
+        .instructions.active {
+            max-height: 500px;
+            opacity: 1;
+            padding: 20px 30px;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        .instructions p {
+            line-height: 1.9;
+            margin-bottom: 0.7rem;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        .divination-area {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 100px;  /* 增加與結果區塊的距離 */
+            margin-top: 30px;
+            padding: 0 10px;  /* 添加左右內邊距 */
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;  /* 改用max-width確保不超出 */
+            height: 680px;  /* 調整高度 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 40px;
+        }
+
+        /* 指標線設計 - 從太極圖延伸到中心 */
+        .container::before {
+            content: '☯';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -380px);  /* 調整回較短的距離 */
+            font-size: 2.5rem;
+            color: var(--basic_color);
+            z-index: 100000;
+            text-shadow: 
+                0 0 15px var(--basic_color),
+                0 0 30px var(--basic_color),
+                0 0 45px rgba(57, 255, 226, 0.6);
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -340px);  /* 相應調整起點 */
+            width: 3px;
+            height: 300px;  /* 縮短指標線 */
+            background: linear-gradient(
+                to bottom,
+                var(--basic_color) 0%,
+                rgba(57, 255, 226, 0.8) 30%,
+                rgba(57, 255, 226, 0.5) 60%,
+                rgba(57, 255, 226, 0.2) 90%,
+                transparent 100%
+            );
+            z-index: 99999;
+            box-shadow: 
+                0 0 15px var(--basic_color),
+                0 0 25px rgba(57, 255, 226, 0.3);
+            animation: lineFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lineFlow {
+            0%, 100% {
+                opacity: 0.6;
+                box-shadow: 
+                    0 0 15px var(--basic_color),
+                    0 0 25px rgba(57, 255, 226, 0.3);
+            }
+            50% {
+                opacity: 1;
+                box-shadow: 
+                    0 0 25px var(--basic_color),
+                    0 0 40px rgba(57, 255, 226, 0.5);
+            }
+        }
+
+        .wheel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(700px, 95vw);  /* 使用較小值：700px或螢幕寬度的95% */
+            height: min(700px, 95vw);
+            border: 3px solid var(--basic_color);
+            box-shadow: 0 0 10px var(--basic_color);
+            border-radius: 50%;
+            transition: transform 10s ease-in-out;
+            overflow: hidden;
+        }
+
+        .wheel span {
+            position: absolute;
+            left: calc(50% - 1px);
+            width: 2px;
+            height: 100%;
+            background: var(--basic_color);
+            transform: rotate(calc(60deg * var(--i)));
+            filter: drop-shadow(0 0 5px var(--basic_color));
+        }
+
+        .spinBtn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: var(--basic_color);
+            color: var(--background_color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px var(--basic_color));
+            user-select: none;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            /* 觸控優化 */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            /* 確保在手機上有足夠的觸控區域 */
+            min-width: 60px;  /* 從80px改為60px */
+            min-height: 60px;
+        }
+
+        .spinBtn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px var(--basic_color);
+        }
+        
+        .spinBtn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        /* Loading動畫樣式 */
+        .spinBtn.loading {
+            pointer-events: none;
+            animation: btnPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes btnPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 10px var(--basic_color);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 30px var(--basic_color), 0 0 50px var(--basic_color);
+            }
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 10001;
+            display: none;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: var(--basic_color);
+            border-radius: 50%;
+            animation: spinRotate 1.5s linear infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-top-color: rgba(57, 255, 226, 0.6);
+            animation-duration: 2s;
+            animation-direction: reverse;
+        }
+
+        .spinner-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-top-color: rgba(57, 255, 226, 0.3);
+            animation-duration: 2.5s;
+        }
+
+        @keyframes spinRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner-bagua {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: var(--basic_color);
+            animation: baguaRotate 3s linear infinite;
+            text-shadow: 0 0 15px var(--basic_color);
+        }
+
+        @keyframes baguaRotate {
+            0% { 
+                content: '☰';
+                transform: translate(-50%, -50%) rotate(0deg) scale(1);
+            }
+            12.5% { 
+                transform: translate(-50%, -50%) rotate(45deg) scale(1.1);
+            }
+            25% { 
+                content: '☱';
+                transform: translate(-50%, -50%) rotate(90deg) scale(1);
+            }
+            37.5% { 
+                transform: translate(-50%, -50%) rotate(135deg) scale(1.1);
+            }
+            50% { 
+                content: '☲';
+                transform: translate(-50%, -50%) rotate(180deg) scale(1);
+            }
+            62.5% { 
+                transform: translate(-50%, -50%) rotate(225deg) scale(1.1);
+            }
+            75% { 
+                content: '☳';
+                transform: translate(-50%, -50%) rotate(270deg) scale(1);
+            }
+            87.5% { 
+                transform: translate(-50%, -50%) rotate(315deg) scale(1.1);
+            }
+            100% { 
+                transform: translate(-50%, -50%) rotate(360deg) scale(1);
+            }
+        }
+
+        .number {
+            position: absolute;
+            inset: 0;
+            rotate: 30deg;
+        }
+
+        .number b {
+            position: absolute;
+            inset: 10px;
+            transform: rotate(calc(60deg * var(--i)));
+            text-align: center;
+            font-size: 1.5em;
+            color: var(--basic_color);
+            font-weight: 500;
+            filter: drop-shadow(0 0 5px var(--basic_color));
+        }
+
+        .inner2 .number b {
+            inset: 15px;
+            font-size: 20px;
+        }
+
+
+        .outter3 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(600px, 81.43vw);  /* 600/700 = 0.8143 */
+            height: min(600px, 81.43vw);
+            background: var(--background_color);
+            border: 3px solid var(--basic_color);
+            transition: transform 9s ease-in-out;
+        }
+
+        .outter2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(500px, 67.86vw);  /* 500/700 = 0.7143 */
+            height: min(500px, 67.86vw);
+            background: var(--background_color);
+            border: 3px solid var(--basic_color);
+            transition: transform 8s ease-in-out;
+        }
+
+        .outter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(400px, 54.29vw);  /* 400/700 = 0.5714 */
+            height: min(400px, 54.29vw);
+            background: var(--background_color);
+            border: 3px solid var(--basic_color);
+            transition: transform 7s ease-in-out;
+        }
+
+        .inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(300px, 40.71vw);  /* 300/700 = 0.4286 */
+            height: min(300px, 40.71vw);
+            background: var(--background_color);
+            border: 3px solid var(--basic_color);
+            transition: transform 6s ease-in-out;
+        }
+
+        .inner2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(200px, 27.14vw);  /* 200/700 = 0.2857 */
+            height: min(200px, 27.14vw);
+            background: var(--background_color);
+            border: 3px solid var(--basic_color);
+            transition: transform 5s ease-in-out;
+        }
+
+        .result {
+            color: var(--basic_color);
+            width: calc(100% - 20px);  /* 左右各10px間距 */
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 16px;
+            border: 2px solid var(--basic_color);
+            padding: 25px 30px;
+            filter: drop-shadow(0 0 10px var(--basic_color));
+            box-shadow: 0 0 15px var(--basic_color);
+            border-radius: 15px;
+            text-align: left;
+            background: rgba(10, 27, 24, 0.95);
+            line-height: 2;
+            position: relative;
+        }
+
+        .result h3 {
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            color: #f43648;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(57, 255, 226, 0.2);
+        }
+
+        .result-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-section h4 {
+            color: #fda085;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-section p {
+            margin: 5px 0;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: #FFD700;
+            font-weight: 600;
+        }
+
+        /* 問題輸入區域 */
+        .question-input-area {
+            width: calc(100% - 20px);
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            padding: 20px;
+            background: rgba(10, 27, 24, 0.95);
+            border: 2px solid var(--basic_color);
+            border-radius: 15px;
+            filter: drop-shadow(0 0 10px var(--basic_color));
+        }
+
+        .question-input-area h3 {
+            color: var(--basic_color);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .question-input-area textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--basic_color);
+            border-radius: 8px;
+            color: var(--basic_color);
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .question-input-area textarea::placeholder {
+            color: rgba(57, 255, 226, 0.5);
+        }
+
+        .question-input-area textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* AI分析區域 */
+        .ai-analysis {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(57, 255, 226, 0.05);
+            border: 1px solid rgba(57, 255, 226, 0.3);
+            border-radius: 10px;
+        }
+
+        .ai-analysis h4 {
+            color: #FFD700;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-analysis-content {
+            color: var(--basic_color);
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .ai-loading {
+            text-align: center;
+            color: var(--basic_color);
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .ai-loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* 進入畫面動畫 - 星空文字流 */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1a2a3a 0%, #0a1b18 100%);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #loadingScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .stars-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--basic_color);
+            border-radius: 50%;
+            animation: starTwinkle 3s ease-in-out infinite;
+            box-shadow: 0 0 4px var(--basic_color);
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        .loading-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .loading-title {
+            font-size: 3.5rem;
+            color: var(--basic_color);
+            letter-spacing: 0.5em;
+            margin-bottom: 2rem;
+            text-shadow: 
+                0 0 20px var(--basic_color),
+                0 0 40px var(--basic_color),
+                0 0 60px rgba(57, 255, 226, 0.5);
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px var(--basic_color),
+                    0 0 40px var(--basic_color),
+                    0 0 60px rgba(57, 255, 226, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 30px var(--basic_color),
+                    0 0 60px var(--basic_color),
+                    0 0 90px rgba(57, 255, 226, 0.8);
+            }
+        }
+
+        .loading-subtitle {
+            font-size: 1.3rem;
+            color: rgba(57, 255, 226, 0.8);
+            letter-spacing: 0.3em;
+            margin-bottom: 3rem;
+        }
+
+        .text-stream {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            color: var(--basic_color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .text-stream span {
+            opacity: 0;
+            animation: streamFlow 3s ease-in-out infinite;
+        }
+
+        .text-stream span:nth-child(1) { animation-delay: 0s; }
+        .text-stream span:nth-child(2) { animation-delay: 0.1s; }
+        .text-stream span:nth-child(3) { animation-delay: 0.2s; }
+        .text-stream span:nth-child(4) { animation-delay: 0.3s; }
+        .text-stream span:nth-child(5) { animation-delay: 0.4s; }
+        .text-stream span:nth-child(6) { animation-delay: 0.5s; }
+        .text-stream span:nth-child(7) { animation-delay: 0.6s; }
+        .text-stream span:nth-child(8) { animation-delay: 0.7s; }
+
+        @keyframes streamFlow {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+        }
+
+        .mystic-circle {
+            width: 150px;
+            height: 150px;
+            border: 3px solid var(--basic_color);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            position: relative;
+            animation: circleRotate 4s linear infinite;
+            box-shadow: 
+                0 0 20px var(--basic_color),
+                inset 0 0 20px var(--basic_color);
+        }
+
+        .mystic-circle::before,
+        .mystic-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid var(--basic_color);
+            border-radius: 50%;
+        }
+
+        .mystic-circle::before {
+            width: 100px;
+            height: 100px;
+            animation: circleRotate 3s linear infinite reverse;
+        }
+
+        .mystic-circle::after {
+            width: 50px;
+            height: 50px;
+            animation: circleRotate 2s linear infinite;
+        }
+
+        @keyframes circleRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .trigram {
+            position: absolute;
+            font-size: 2rem;
+            color: var(--basic_color);
+            text-shadow: 0 0 10px var(--basic_color);
+        }
+
+        .trigram:nth-child(1) { top: -10%; left: 50%; transform: translateX(-50%); }
+        .trigram:nth-child(2) { top: 15%; right: 0%; }
+        .trigram:nth-child(3) { top: 50%; right: -10%; transform: translateY(-50%); }
+        .trigram:nth-child(4) { bottom: 15%; right: 0%; }
+        .trigram:nth-child(5) { bottom: -10%; left: 50%; transform: translateX(-50%); }
+        .trigram:nth-child(6) { bottom: 15%; left: 0%; }
+        .trigram:nth-child(7) { top: 50%; left: -10%; transform: translateY(-50%); }
+        .trigram:nth-child(8) { top: 15%; left: 0%; }
+
+        /* 主內容淡入動畫 */
+        .main-wrapper {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 響應式設計 */
+        
+        /* 平板直向 (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .main-wrapper {
+                max-width: 700px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .divination-area {
+                transform: scale(0.85);
+            }
+            
+            .result {
+                font-size: 16px;
+                padding: 25px 30px;
+            }
+        }
+        
+        /* 平板橫向 / 小螢幕筆電 (481px - 768px) */
+        @media (max-width: 768px) and (min-width: 481px) {
+            body {
+                padding: 30px 15px;
+            }
+
+            .main-wrapper {
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+                letter-spacing: 0.2em;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .instructions-toggle {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.9rem;
+            }
+
+            .instructions {
+                font-size: 0.95rem;
+                padding: 20px 25px;
+                max-width: 100%;
+            }
+
+            .instructions.active {
+                padding: 20px 25px;
+            }
+
+            .instructions h3 {
+                font-size: 1.3rem;
+            }
+
+            .divination-area {
+                transform: scale(0.95);  /* 從0.85改為0.95，轉盤再大一點 */
+                margin-bottom: 60px;  /* 增加間距 */
+                padding: 0 15px;  /* 添加內邊距 */
+            }
+
+            .container {
+                height: 580px;  /* 調整高度 */
+            }
+            
+            /* 調整太極圖和指標線 */
+            .container::before {
+                transform: translate(-50%, -300px);
+                font-size: 2.2rem;
+            }
+            
+            .container::after {
+                transform: translate(-50%, -265px);
+                height: 240px;
+            }
+            
+            /* 縮小按鈕 */
+            .spinBtn {
+                width: 65px;
+                height: 65px;
+                font-size: 1.3em;
+                min-width: 55px;
+                min-height: 55px;
+            }
+            
+            /* 調整符號大小 */
+            
+            .result {
+                font-size: 15px;
+                padding: 20px 25px;
+                max-width: 100%;
+            }
+            
+            /* 轉盤符號 RWD */
+            .number b {
+                inset: 8px;
+                font-size: 1.3em;
+            }
+            
+            .inner2 .number b {
+                inset: 12px;
+                font-size: 18px;
+            }
+
+            .result h3 {
+                font-size: 1.4em;
+            }
+            
+            .result-section {
+                margin-bottom: 1.5rem;
+            }
+            
+            .result-section h4 {
+                font-size: 1.1em;
+            }
+
+            /* 進入動畫響應式 */
+            .loading-title {
+                font-size: 2.5rem;
+                letter-spacing: 0.4em;
+            }
+
+            .loading-subtitle {
+                font-size: 1.1rem;
+                letter-spacing: 0.25em;
+            }
+
+            .mystic-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .trigram {
+                font-size: 1.5rem;
+            }
+
+            .text-stream {
+                font-size: 1.3rem;
+            }
+            
+            /* Loading spinner 調整 */
+            .loading-spinner {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .spinner-bagua {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* 大手機橫向 / 小平板直向 (376px - 480px) */
+        @media (max-width: 480px) and (min-width: 376px) {
+            body {
+                padding: 20px 12px;
+                min-height: 100vh;
+            }
+
+            .main-wrapper {
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 0.18em;
+                margin-bottom: 0.6rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+                letter-spacing: 0.1em;
+            }
+
+            .instructions-toggle {
+                font-size: 0.85rem;
+                padding: 0.38rem 0.8rem;
+            }
+
+            .instructions {
+                font-size: 0.92rem;
+                padding: 18px 22px;
+                line-height: 1.7;
+            }
+
+            .instructions.active {
+                padding: 18px 22px;
+            }
+
+            .instructions h3 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+            
+            .instructions p {
+                margin-bottom: 0.7rem;
+            }
+
+            .divination-area {
+                transform: scale(0.85);  /* 從0.75改為0.85，轉盤再大一點 */
+                margin-bottom: 30px;  /* 改為正數，增加與結果的間距 */
+                margin-top: 0;
+                padding: 0 10px;  /* 確保不超出螢幕 */
+            }
+
+            .container {
+                height: 550px;  /* 調整高度 */
+            }
+            
+            /* 調整太極圖和指標線 */
+            .container::before {
+                transform: translate(-50%, -280px);  /* 縮短距離 */
+                font-size: 2rem;  /* 縮小太極圖 */
+            }
+            
+            .container::after {
+                transform: translate(-50%, -250px);  /* 調整起點 */
+                height: 220px;  /* 縮短指標線 */
+            }
+            
+            /* 縮小按鈕 */
+            .spinBtn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+                min-width: 50px;
+                min-height: 50px;
+            }
+            
+            /* 調整符號大小 */
+            .number b {
+                inset: 5px;
+                font-size: 15px;
+            }
+            
+            .inner .number b {
+                inset: 7px;
+                font-size: 13px;
+            }
+            
+            .inner2 .number b {
+                inset: 8px;
+                font-size: 11px;
+            }
+
+            .result {
+                font-size: 14.5px;
+                padding: 18px 22px;
+                line-height: 1.8;
+            }
+
+            .result h3 {
+                font-size: 1.35em;
+                margin-bottom: 16px;
+            }
+            
+            .result-section {
+                margin-bottom: 1.3rem;
+            }
+            
+            .result-section h4 {
+                font-size: 1.05em;
+                margin-bottom: 0.6rem;
+            }
+            
+            .result-section p {
+                font-size: 0.95em;
+                line-height: 1.7;
+            }
+
+            /* 進入動畫響應式 */
+            .loading-title {
+                font-size: 2.2rem;
+                letter-spacing: 0.32em;
+            }
+
+            .loading-subtitle {
+                font-size: 1rem;
+                letter-spacing: 0.22em;
+            }
+
+            .mystic-circle {
+                width: 110px;
+                height: 110px;
+            }
+
+            .mystic-circle::before {
+                width: 80px;
+                height: 80px;
+            }
+
+            .mystic-circle::after {
+                width: 50px;
+                height: 50px;
+            }
+
+            .trigram {
+                font-size: 1.4rem;
+            }
+
+            .text-stream {
+                font-size: 1.2rem;
+                gap: 0.35rem;
+            }
+            
+            /* Loading spinner 調整 */
+            .loading-spinner {
+                width: 95px;
+                height: 95px;
+            }
+            
+            .spinner-bagua {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* 標準手機直向 (321px - 375px) */
+        @media (max-width: 375px) and (min-width: 321px) {
+            body {
+                padding: 18px 10px;
+                min-height: 100vh;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+                letter-spacing: 0.15em;
+                margin-bottom: 0.5rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+                letter-spacing: 0.08em;
+            }
+
+            .instructions-toggle {
+                font-size: 0.8rem;
+                padding: 0.35rem 0.75rem;
+            }
+
+            .instructions {
+                font-size: 0.9rem;
+                padding: 16px 20px;
+                line-height: 1.6;
+            }
+
+            .instructions.active {
+                padding: 16px 20px;
+            }
+
+            .instructions h3 {
+                font-size: 1.2rem;
+                margin-bottom: 0.9rem;
+            }
+            
+            .instructions p {
+                margin-bottom: 0.6rem;
+            }
+
+            .divination-area {
+                transform: scale(0.8);  /* 從0.7改為0.8，轉盤再大一點 */
+                margin-bottom: 20px;  /* 改為正數 */
+                margin-top: 0;
+                padding: 0 10px;  /* 確保不超出螢幕 */
+            }
+
+            .container {
+                height: 520px;  /* 調整高度 */
+            }
+            
+            /* 調整太極圖和指標線 */
+            .container::before {
+                transform: translate(-50%, -260px);  /* 進一步縮短 */
+                font-size: 1.8rem;
+            }
+            
+            .container::after {
+                transform: translate(-50%, -235px);
+                height: 210px;
+            }
+            
+            /* 進一步縮小按鈕 */
+            .spinBtn {
+                width: 55px;
+                height: 55px;
+                font-size: 1.1em;
+                min-width: 45px;
+                min-height: 45px;
+            }
+            
+            /* 調整符號大小 */
+            .number b {
+                inset: 6px;
+                font-size: 0.95em;  /* 從1.1em改為0.95em */
+            }
+            
+            .inner2 .number b {
+                inset: 9px;
+                font-size: 12px;  /* 從14px改為12px */
+            }
+
+            .result {
+                font-size: 14px;
+                padding: 16px 20px;
+                line-height: 1.75;
+            }
+
+            .result h3 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+            }
+            
+            .result-section {
+                margin-bottom: 1.2rem;
+            }
+            
+            .result-section h4 {
+                font-size: 1.02em;
+                margin-bottom: 0.5rem;
+            }
+            
+            .result-section p {
+                font-size: 0.93em;
+                line-height: 1.65;
+            }
+            
+            /* 爻辭區塊優化 */
+            .result-section div[style*="background: rgba(57, 255, 226, 0.05)"] {
+                padding: 8px !important;
+                margin-top: 12px !important;
+            }
+            
+            .result-section div[style*="background: rgba(57, 255, 226, 0.05)"] p {
+                font-size: 0.88em !important;
+                margin: 4px 0 !important;
+            }
+
+            /* 進入動畫響應式 */
+            .loading-title {
+                font-size: 2rem;
+                letter-spacing: 0.3em;
+            }
+
+            .loading-subtitle {
+                font-size: 0.95rem;
+                letter-spacing: 0.2em;
+            }
+
+            .mystic-circle {
+                width: 100px;
+                height: 100px;
+            }
+
+            .mystic-circle::before {
+                width: 70px;
+                height: 70px;
+            }
+
+            .mystic-circle::after {
+                width: 40px;
+                height: 40px;
+            }
+
+            .trigram {
+                font-size: 1.3rem;
+            }
+
+            .text-stream {
+                font-size: 1.1rem;
+                gap: 0.3rem;
+            }
+            
+            /* Loading spinner 調整 */
+            .loading-spinner {
+                width: 85px;
+                height: 85px;
+            }
+            
+            .spinner-bagua {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 小手機 (≤320px) */
+        @media (max-width: 320px) {
+            body {
+                padding: 15px 8px;
+                min-height: 100vh;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+                letter-spacing: 0.12em;
+                margin-bottom: 0.4rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+                letter-spacing: 0.06em;
+            }
+
+            .instructions-toggle {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.65rem;
+            }
+
+            .instructions {
+                font-size: 0.85rem;
+                padding: 14px 16px;
+                line-height: 1.55;
+            }
+
+            .instructions.active {
+                padding: 14px 16px;
+            }
+
+            .instructions h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .instructions p {
+                margin-bottom: 0.55rem;
+            }
+
+            .divination-area {
+                transform: scale(0.7);  /* 從0.6改為0.7，轉盤再大一點 */
+                margin-bottom: 10px;  /* 改為正數 */
+                margin-top: 0;
+                padding: 0 10px;  /* 確保不超出螢幕 */
+            }
+
+            .container {
+                height: 480px;  /* 調整高度 */
+            }
+            
+            /* 調整太極圖和指標線 */
+            .container::before {
+                transform: translate(-50%, -240px);
+                font-size: 1.6rem;
+            }
+            
+            .container::after {
+                transform: translate(-50%, -218px);
+                height: 195px;
+            }
+            
+            /* 最小化按鈕 */
+            .spinBtn {
+                width: 50px;
+                height: 50px;
+                font-size: 1em;
+                min-width: 40px;
+                min-height: 40px;
+            }
+            
+            /* 調整符號大小 */
+            .number b {
+                inset: 5px;
+                font-size: 0.85em;  /* 從1em改為0.85em */
+            }
+            
+            .inner2 .number b {
+                inset: 8px;
+                font-size: 11px;  /* 從13px改為11px */
+            }
+
+            .result {
+                font-size: 13px;
+                padding: 14px 16px;
+                line-height: 1.7;
+            }
+
+            .result h3 {
+                font-size: 1.25em;
+                margin-bottom: 13px;
+            }
+            
+            .result-section {
+                margin-bottom: 1rem;
+            }
+            
+            .result-section h4 {
+                font-size: 1em;
+                margin-bottom: 0.45rem;
+            }
+            
+            .result-section p {
+                font-size: 0.9em;
+                line-height: 1.6;
+            }
+            
+            .highlight {
+                font-size: 0.95em;
+            }
+            
+            /* 爻辭區塊優化 */
+            .result-section div[style*="background: rgba(57, 255, 226, 0.05)"] {
+                padding: 6px !important;
+                margin-top: 10px !important;
+                border-left-width: 2px !important;
+            }
+            
+            .result-section div[style*="background: rgba(57, 255, 226, 0.05)"] p {
+                font-size: 0.85em !important;
+                margin: 3px 0 !important;
+            }
+
+            /* 進入動畫響應式 */
+            .loading-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.25em;
+            }
+
+            .loading-subtitle {
+                font-size: 0.85rem;
+                letter-spacing: 0.18em;
+            }
+
+            .mystic-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .mystic-circle::before {
+                width: 60px;
+                height: 60px;
+            }
+
+            .mystic-circle::after {
+                width: 35px;
+                height: 35px;
+            }
+
+            .trigram {
+                font-size: 1.2rem;
+            }
+
+            .text-stream {
+                font-size: 1rem;
+                gap: 0.25rem;
+            }
+            
+            /* Loading spinner 調整 */
+            .loading-spinner {
+                width: 75px;
+                height: 75px;
+            }
+            
+            .spinner-bagua {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* 橫向模式通用優化 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .header p {
+                font-size: 0.85rem;
+            }
+            
+            .instructions-toggle {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.8rem;
+            }
+            
+            .divination-area {
+                transform: scale(0.75);  /* 從0.65改為0.75，轉盤再大一點 */
+                margin: 0 0 20px 0;  /* 調整間距 */
+                padding: 0 10px;
+            }
+            
+            .container {
+                height: 450px;  /* 調整高度 */
+            }
+            
+            /* 調整太極圖和指標線 */
+            .container::before {
+                transform: translate(-50%, -225px);
+                font-size: 1.5rem;
+            }
+            
+            .container::after {
+                transform: translate(-50%, -205px);
+                height: 185px;
+            }
+            
+            /* 縮小按鈕 */
+            .spinBtn {
+                width: 48px;
+                height: 48px;
+                font-size: 0.95em;
+                min-width: 38px;
+                min-height: 38px;
+            }
+            
+            /* 調整符號大小 */
+            .number b {
+                inset: 5px;
+                font-size: 0.8em;  /* 從0.95em改為0.8em */
+            }
+            
+            .inner2 .number b {
+                inset: 7px;
+                font-size: 10px;  /* 從12px改為10px */
+            }
+            
+            .result {
+                font-size: 13px;
+                padding: 15px;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+        }
+
+        .instructions p {
+            line-height: 1.8;
+            margin-bottom: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 進入畫面動畫 -->
+    <div id="loadingScreen">
+        <div class="stars-container" id="starsContainer"></div>
+        
+        <div class="loading-content">
+            <div class="mystic-circle">
+                <div class="trigram">☰</div>
+                <div class="trigram">☱</div>
+                <div class="trigram">☲</div>
+                <div class="trigram">☳</div>
+                <div class="trigram">☴</div>
+                <div class="trigram">☵</div>
+                <div class="trigram">☶</div>
+                <div class="trigram">☷</div>
+            </div>
+            
+            <h1 class="loading-title">易經占卜</h1>
+            <p class="loading-subtitle">無極生太極 · 太極生兩儀</p>
+            
+            <div class="text-stream">
+                <span>乾</span>
+                <span>坤</span>
+                <span>震</span>
+                <span>巽</span>
+                <span>坎</span>
+                <span>離</span>
+                <span>艮</span>
+                <span>兌</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="header">
+            <h1>易經八卦占卜</h1>
+            <p>心誠則靈 · 問事先誠心默念</p>
+            <div class="instructions-toggle" id="instructionsToggle">
+                📖 使用說明
+            </div>
+            <div class="instructions" id="instructions">
+                <h3>🔮 如何使用</h3>
+                <p>1️⃣ 心中默念想要占卜的問題</p>
+                <p>2️⃣ 保持內心平靜,誠心求問</p>
+                <p>3️⃣ 點擊中央「問」字開始占卜</p>
+                <p>4️⃣ 六個轉盤將自動旋轉並停止</p>
+                <p>5️⃣ 系統將根據陰陽組合生成卦象</p>
+                <p>6️⃣ 仔細閱讀卦辭與爻辭的含義</p>
+                <p>💡 提示: 每次占卜前請專心一念,同一問題不宜重複占問</p>
+            </div>
+        </div>
+
+        <div class="divination-area">
+            <div class="container">
+                <div class="spinBtn">問</div>
+                
+                <!-- Loading動畫 -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-bagua">☰</div>
+                </div>
+                
+                <div class="wheel">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">○○○</b>
+                        <b style="--i:1;">○○●</b>
+                        <b style="--i:2;">○●●</b>
+                        <b style="--i:3;">●●●</b>
+                        <b style="--i:4;">●●○</b>
+                        <b style="--i:5;">●○○</b>
+                    </div>
+                </div>
+                
+                <div class="wheel outter3">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">○○●</b>
+                        <b style="--i:1;">○●●</b>
+                        <b style="--i:2;">●●●</b>
+                        <b style="--i:3;">●●○</b>
+                        <b style="--i:4;">●○○</b>
+                        <b style="--i:5;">○○○</b>
+                    </div>
+                </div>
+                
+                <div class="wheel outter2">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">○●●</b>
+                        <b style="--i:1;">●●●</b>
+                        <b style="--i:2;">●●○</b>
+                        <b style="--i:3;">●○○</b>
+                        <b style="--i:4;">○○○</b>
+                        <b style="--i:5;">○○●</b>
+                    </div>
+                </div>
+                
+                <div class="wheel outter">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">●●●</b>
+                        <b style="--i:1;">●●○</b>
+                        <b style="--i:2;">●○○</b>
+                        <b style="--i:3;">○○○</b>
+                        <b style="--i:4;">○○●</b>
+                        <b style="--i:5;">○●●</b>
+                    </div>
+                </div>
+                
+                <div class="wheel inner">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">●●○</b>
+                        <b style="--i:1;">●○○</b>
+                        <b style="--i:2;">○○○</b>
+                        <b style="--i:3;">○○●</b>
+                        <b style="--i:4;">○●●</b>
+                        <b style="--i:5;">●●●</b>
+                    </div>
+                </div>
+                
+                <div class="wheel inner2">
+                    <span style="--i:0;"></span>
+                    <span style="--i:1;"></span>
+                    <span style="--i:2;"></span>
+                    <div class="number">
+                        <b style="--i:0;">●○○</b>
+                        <b style="--i:1;">○○○</b>
+                        <b style="--i:2;">○○●</b>
+                        <b style="--i:3;">○●●</b>
+                        <b style="--i:4;">●●●</b>
+                        <b style="--i:5;">●●○</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result" id="result">無結果</div>
+
+        <div class="instructions">
+            <h3>📖 使用說明</h3>
+            <p>● <strong>靜心默念：</strong>占卜時請先靜心,誠心默念所要問的事</p>
+            <p>● <strong>開始占卜：</strong>點擊中央「問」字按鈕,六層輪盤將隨機旋轉</p>
+            <p>● <strong>等待結果：</strong>等待約10秒,系統將顯示完整卜卦結果</p>
+            <p>● <strong>查看卦象：</strong>包含本卦、變卦(之卦)、動爻及對應爻辭</p>
+            <p>● <strong>詳細解析：</strong>系統會根據卦象提供詳細的吉凶分析與建議</p>
+            <p>● <strong>重新占卜：</strong>點擊「重置」可進行下一次占卜</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== 進入畫面動畫控制 =====
+        window.addEventListener('load', function() {
+            // 生成星星
+            const starsContainer = document.getElementById('starsContainer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+            
+            // 3秒後隱藏進入畫面
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.classList.add('hidden');
+                
+                // 進入畫面完全消失後移除元素
+                setTimeout(function() {
+                    loadingScreen.remove();
+                }, 1000);
+            }, 3000);
+        });
+
+        // ===== 使用說明展開/收合控制 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('instructionsToggle');
+            const instructions = document.getElementById('instructions');
+            
+            if (toggle && instructions) {
+                toggle.addEventListener('click', function() {
+                    toggle.classList.toggle('active');
+                    instructions.classList.toggle('active');
+                });
+            }
+        });
+
+        // ===== 原有的易經占卜邏輯 =====
+        /**
+         * 易經八卦占卜系統 - 完整版
+         * 包含變卦邏輯、爻辭判斷
+         */
+
+        // 64卦卦辭數據
+        const guaCi = {
+            '00': { name: '乾', ci: '元亨利貞', explain: '大吉大利,萬事皆宜。君子自強不息,剛健有為則能獲得亨通。天行健,君子以自強不息。' },
+            '01': { name: '履', ci: '履虎尾,不咥人,亨', explain: '如履薄冰般謹慎行事,即使涉險也能化險為夷,終獲亨通。謹言慎行,禮儀端莊則無咎。' },
+            '02': { name: '同人', ci: '同人于野,亨,利涉大川,利君子貞', explain: '志同道合者相聚,廣結善緣。利於遠行與堅守正道,團結合作可成大事,人和則萬事興。' },
+            '03': { name: '無妄', ci: '元亨利貞,其匪正有眚,不利有攸往', explain: '守正則大吉大利。若不守正道則有災,不宜妄動,順應天意為上,真誠無偽則吉。' },
+            '04': { name: '姤', ci: '女壯,勿用取女', explain: '陰氣漸盛,需防小人。不宜輕舉妄動,保持警惕為要,一陰來復需謹慎應對。' },
+            '05': { name: '訟', ci: '有孚窒惕,中吉,終凶,利見大人,不利涉大川', explain: '有爭訟之象。中途停止則吉,堅持則凶。宜求助於有德之人,不宜冒險,和解為上。' },
+            '06': { name: '遯', ci: '亨,小利貞', explain: '及時退避則亨通。小事守正則吉,進退有度為上策,識時務者為俊傑,該退則退。' },
+            '07': { name: '否', ci: '否之匪人,不利君子貞,大往小來', explain: '運勢不佳,小人當道。君子宜守不宜進,以靜制動,等待時機,天地不交為否。' },
+            '10': { name: '夬', ci: '揚于王庭,孚號有厲,告自邑,不利即戎,利有攸往', explain: '剛健決斷之時。宜於眾人面前光明正大行事,但需謹慎,不可過於強硬,決而能和。' },
+            '11': { name: '兌', ci: '亨,利貞', explain: '喜悅和順,萬事亨通。利於堅守正道,以和為貴,言語溫和則吉,悅以動之。' },
+            '12': { name: '革', ci: '已日乃孚,元亨利貞,悔亡', explain: '變革之時已至。順勢而為則大吉,改革創新可獲成功,悔恨將消亡,革故鼎新之機。' },
+            '13': { name: '隨', ci: '元亨利貞,無咎', explain: '隨順時勢,順應變化。不固執己見則大吉無咎,適時跟隨為智慧,澤中有雷為隨。' },
+            '14': { name: '大過', ci: '棟橈,利有攸往,亨', explain: '重擔過大如棟梁彎曲。需謹慎行事但仍可前進,關鍵時刻需當機立斷,非常之時行非常之事。' },
+            '15': { name: '困', ci: '亨,貞大人吉,無咎,有言不信', explain: '雖處困境但守正則吉。有德之人能化解困境,言語可能不被相信,默默行動為佳,困而能亨。' },
+            '16': { name: '咸', ci: '亨,利貞,取女吉', explain: '感應相通,心意相合。婚姻美滿,人際和諧,真誠待人則吉,二氣感應成和合。' },
+            '17': { name: '萃', ci: '亨,王假有廟,利見大人,亨,利貞,用大牲吉,利有攸往', explain: '聚集團結之時。利於見貴人,祭祀則吉,眾志成城可成大業,聚合有道則昌。' },
+            '20': { name: '大有', ci: '元亨', explain: '大有收穫,萬事亨通。財富豐盛,事業有成,正是豐收之時,火在天上照四方。' },
+            '21': { name: '睽', ci: '小事吉', explain: '意見相左,出現分歧。小事可成,大事需謹慎,求同存異為宜,上火下澤相背離。' },
+            '22': { name: '離', ci: '利貞,亨,畜牝牛吉', explain: '光明依附,如火焰需附著於物。守正則吉,柔順謙遜為佳,明兩作離繼明照。' },
+            '23': { name: '噬嗑', ci: '亨,利用獄', explain: '咬合除障,剛柔相濟。利於決斷是非,處理糾紛,明察秋毫則吉,雷電合威除害。' },
+            '24': { name: '鼎', ci: '元吉,亨', explain: '革故鼎新,大吉大利。正是改革創新的好時機,舊事物將被新事物取代,以木巽火烹飪。' },
+            '25': { name: '未濟', ci: '亨,小狐汔濟,濡其尾,無攸利', explain: '事未完成,不可輕進,謹慎為上。' },
+            '26': { name: '旅', ci: '小亨,旅貞吉', explain: '客居在外,小有收穫,守正則吉。' },
+            '27': { name: '晉', ci: '康侯用錫馬蕃庶,晝日三接', explain: '進升順利,受到賞識,前途光明。' },
+            '30': { name: '大壯', ci: '利貞', explain: '陽剛壯盛,守正為宜,勿過於躁進。' },
+            '31': { name: '歸妹', ci: '征凶,無攸利', explain: '婚嫁不宜,前進則凶,宜靜待時機。' },
+            '32': { name: '豐', ci: '亨,王假之,勿憂,宜日中', explain: '豐盛之象,把握巔峰時刻,勿憂慮。' },
+            '33': { name: '震', ci: '亨,震來虩虩,笑言啞啞,震驚百里,不喪匕鬯', explain: '雷動震驚,危機中保持鎮定則吉。' },
+            '34': { name: '恆', ci: '亨,無咎,利貞,利有攸往', explain: '恆久不變,堅持正道,持之以恆則吉。' },
+            '35': { name: '解', ci: '利西南,無所往,其來復吉,有攸往,夙吉', explain: '解除困境,宜往西南,早行動則吉。' },
+            '36': { name: '小過', ci: '亨,利貞,可小事,不可大事', explain: '小事可為,大事不宜,謹守分寸。' },
+            '37': { name: '家人', ci: '利女貞', explain: '家庭和睦,女子持家則吉,內外有別。' },
+            '40': { name: '姤', ci: '女壯,勿用取女', explain: '陰盛陽衰,不宜娶妻,防範小人。' },
+            '41': { name: '中孚', ci: '豚魚吉,利涉大川,利貞', explain: '誠信感人,利於渡過難關,守正則吉。' },
+            '42': { name: '家人', ci: '利女貞', explain: '齊家有道,婦德為重,家和萬事興。' },
+            '43': { name: '損', ci: '有孚,元吉,無咎,可貞,利有攸往', explain: '減損自我,誠信待人,反而獲益。' },
+            '44': { name: '巽', ci: '小亨,利有攸往,利見大人', explain: '柔順謙遜,小有所獲,見貴人則吉。' },
+            '45': { name: '渙', ci: '亨,王假有廟,利涉大川,利貞', explain: '渙散聚合,祭祀則吉,可涉險。' },
+            '46': { name: '漸', ci: '女歸吉,利貞', explain: '循序漸進,如女子出嫁般謹慎則吉。' },
+            '47': { name: '坤', ci: '元亨,利牝馬之貞', explain: '柔順厚德,如母馬般順從則大吉。' },
+            '50': { name: '需', ci: '有孚,光亨,貞吉,利涉大川', explain: '等待時機,誠信光明,守正則可渡險。' },
+            '51': { name: '節', ci: '亨,苦節不可貞', explain: '節制有度,過度節制反而不利。' },
+            '52': { name: '既濟', ci: '亨小,利貞,初吉終亂', explain: '事已成功,但需謹慎,善始者未必善終。' },
+            '53': { name: '屯', ci: '元亨利貞,勿用有攸往,利建侯', explain: '創業維艱,宜守不宜攻,建立基業。' },
+            '54': { name: '井', ci: '改邑不改井,無喪無得,往來井井', explain: '恆久不變如古井,無得無失,平淡安穩。' },
+            '55': { name: '坎', ci: '習坎,有孚維心亨,行有尚', explain: '重重險阻,誠信之心可渡難關。' },
+            '56': { name: '蹇', ci: '利西南,不利東北,利見大人,貞吉', explain: '前路艱難,往西南則吉,見貴人得助。' },
+            '57': { name: '比', ci: '吉,原筮,元永貞,無咎,不寧方來,後夫凶', explain: '親近依附,和睦相處。誠心相待,長久守正無咎,遲來者將後悔,水在地上親比近。' },
+            '60': { name: '大畜', ci: '利貞,不家食吉,利涉大川', explain: '大有積蓄,蓄勢待發。不食家祿而外求則吉,有實力可渡難關,山中有天大蓄聚。' },
+            '61': { name: '損', ci: '有孚,元吉,無咎,可貞,利有攸往,曷之用,二簋可用享', explain: '減損自身,增益他人。誠信則大吉,損己利人反而獲福,施比受更有福,山下有澤謙讓德。' },
+            '62': { name: '賁', ci: '亨,小利有攸往', explain: '文飾美觀,外表華麗。小有進益,但不可過度裝飾,重質不重文為要,山下有火賁飾美。' },
+            '63': { name: '頤', ci: '貞吉,觀頤,自求口實', explain: '養生之道,修養身心。觀察養生,自求飲食,守正則吉,節制飲食為養,山下有雷養正道。' },
+            '64': { name: '蠱', ci: '元亨,利涉大川,先甲三日,後甲三日', explain: '除舊布新,撥亂反正。大吉大利,把握時機很重要,革除弊端之時,山下有風蠱惑除。' },
+            '65': { name: '蒙', ci: '亨,匪我求童蒙,童蒙求我,初筮告,再三瀆,瀆則不告,利貞', explain: '啟蒙教育,循循善誘。學生求教於師,誠心則成,反復則不告,教學相長,山下出泉蒙昧啟。' },
+            '66': { name: '艮', ci: '艮其背,不獲其身,行其庭,不見其人,無咎', explain: '適時止步,靜守不動。不妄動則無咎,知止而後有定,靜守為宜,重山相疊艮止象。' },
+            '67': { name: '剝', ci: '不利有攸往', explain: '剝落衰敗,陰盛陽衰。不宜前進,順時而動,靜待陽氣回復之時,山附於地剝落時。' },
+            '70': { name: '泰', ci: '小往大來,吉亨', explain: '通泰順暢,天地交泰。小往大來,諸事亨通,正是萬事如意之時,天地交而萬物通。' },
+            '71': { name: '臨', ci: '元亨利貞,至于八月有凶', explain: '君臨天下,大權在握。大吉大利,但需防範未來衰敗,盛極防衰,澤上有地臨下觀。' },
+            '72': { name: '復', ci: '亨,出入無疾,朋來無咎,反復其道,七日來復,利有攸往', explain: '復返本源,重新開始。往來無礙,朋友相助無咎,循環往復是自然之道,雷在地中復陽生。' },
+            '73': { name: '升', ci: '元亨,用見大人,勿恤,南征吉', explain: '上升順利,步步高升。見貴人則吉,往南方則吉,前途一片光明,地中生木升進象。' },
+            '74': { name: '師', ci: '貞丈人吉,無咎', explain: '出師征戰,興師動眾。有德長者統領則吉無咎,師出有名則得民心,地中有水師眾聚。' },
+            '75': { name: '謙', ci: '亨,君子有終', explain: '謙遜為懷,謙受益。君子必有善終,謙虛使人進步,驕傲使人落後,地中有山謙卑德。' },
+            '76': { name: '小畜', ci: '亨,密雲不雨,自我西郊', explain: '小有積蓄,蓄勢待發。時機未至如密雲不雨,耐心等待為上,積小成大,風行天上小蓄積。' },
+            '77': { name: '坤', ci: '元亨,利牝馬之貞,君子有攸往,先迷後得主,利西南得朋,東北喪朋,安貞吉', explain: '柔順承載,厚德載物。如大地般包容萬物,以柔克剛,順承天道則吉,地道也妻道也臣道也。' }
+        };
+
+        // 64卦完整爻辭數據
+        const guaYaoData = {
+            '00': ['潛龍勿用', '見龍在田,利見大人', '君子終日乾乾,夕惕若厲,無咎', '或躍在淵,無咎', '飛龍在天,利見大人', '亢龍有悔'],
+            '01': ['素履往,無咎', '履道坦坦,幽人貞吉', '眇能視,跛能履,履虎尾咥人,凶', '履虎尾,愬愬終吉', '夬履,貞厲', '視履考祥,其旋元吉'],
+            '02': ['同人于門,無咎', '同人于宗,吝', '伏戎于莽,升其高陵,三歲不興', '乘其墉,弗克攻,吉', '同人先號咷而後笑,大師克相遇', '同人于郊,無悔'],
+            '03': ['無妄往,吉', '不耕穫,不菑畬,則利有攸往', '無妄之災,或繫之牛,行人之得,邑人之災', '可貞,無咎', '無妄之疾,勿藥有喜', '無妄行,有眚,無攸利'],
+            '04': ['繫于金柅,貞吉,有攸往見凶', '包有魚,無咎,不利賓', '臀無膚,其行次且,厲,無大咎', '包無魚,起凶', '以杞包瓜,含章,有隕自天', '姤其角,吝,無咎'],
+            '05': ['不永所事,小有言,終吉', '不克訟,歸而逋,其邑人三百戶,無眚', '食舊德,貞厲,終吉,或從王事,無成', '不克訟,復即命渝,安貞吉', '訟,元吉', '或錫之鞶帶,終朝三褫之'],
+            '06': ['遯尾,厲,勿用有攸往', '執之用黃牛之革,莫之勝說', '係遯,有疾厲,畜臣妾吉', '好遯,君子吉,小人否', '嘉遯,貞吉', '肥遯,無不利'],
+            '07': ['拔茅茹以其彙,貞吉亨', '包承,小人吉,大人否亨', '包羞', '有命無咎,疇離祉', '休否,大人吉,其亡其亡,繫于苞桑', '傾否,先否後喜'],
+            '10': ['壯于前趾,往不勝為咎', '惕號,莫夜有戎,勿恤', '壯于頄,有凶,君子夬夬獨行,遇雨若濡', '臀無膚,其行次且,牽羊悔亡,聞言不信', '莧陸夬夬,中行無咎', '無號,終有凶'],
+            '11': ['和兌,吉', '孚兌,吉,悔亡', '來兌,凶', '商兌未寧,介疾有喜', '孚于剝,有厲', '引兌'],
+            '12': ['鞏用黃牛之革', '己日乃革之,征吉,無咎', '征凶,貞厲,革言三就,有孚', '悔亡,有孚改命,吉', '大人虎變,未占有孚', '君子豹變,小人革面,征凶,居貞吉'],
+            '13': ['官有渝,貞吉,出門交有功', '係小子,失丈夫', '係丈夫,失小子,隨有求得,利居貞', '隨有獲,貞凶,有孚在道,以明,何咎', '孚于嘉,吉', '拘係之,乃從維之,王用亨于西山'],
+            '14': ['藉用白茅,無咎', '枯楊生稊,老夫得其女妻,無不利', '棟橈,凶', '棟隆,吉,有它吝', '枯楊生華,老婦得其士夫,無咎無譽', '過涉滅頂,凶,無咎'],
+            '15': ['臀困于株木,入于幽谷,三歲不覿', '困于酒食,朱紱方來,利用享祀,征凶,無咎', '困于石,據于蒺藜,入于其宮,不見其妻,凶', '來徐徐,困于金車,吝,有終', '劓刖,困于赤紱,乃徐有說,利用祭祀', '困于葛藟,于臲卼,曰動悔有悔,征吉'],
+            '16': ['咸其拇', '咸其腓,凶,居吉', '咸其股,執其隨,往吝', '貞吉,悔亡,憧憧往來,朋從爾思', '咸其脢,無悔', '咸其輔頰舌'],
+            '17': ['有孚不終,乃亂乃萃,若號一握為笑,勿恤,往無咎', '引吉,無咎,孚乃利用禴', '萃如嗟如,無攸利,往無咎,小吝', '大吉,無咎', '萃有位,無咎,匪孚,元永貞,悔亡', '齎咨涕洟,無咎'],
+            '20': ['無交害,匪咎,艱則無咎', '大車以載,有攸往,無咎', '公用亨于天子,小人弗克', '匪其彭,無咎', '厥孚交如威如,吉', '自天祐之,吉無不利'],
+            '21': ['悔亡,喪馬勿逐自復,見惡人,無咎', '遇主于巷,無咎', '見輿曳,其牛掣,其人天且劓,無初有終', '睽孤,遇元夫,交孚,厲無咎', '悔亡,厥宗噬膚,往何咎', '睽孤,見豕負塗,載鬼一車,先張之弧,後說之弧'],
+            '22': ['履錯然,敬之,無咎', '黃離,元吉', '日昃之離,不鼓缶而歌,則大耋之嗟,凶', '突如其來如,焚如,死如,棄如', '出涕沱若,戚嗟若,吉', '王用出征,有嘉折首,獲匪其醜,無咎'],
+            '23': ['屨校滅趾,無咎', '噬膚滅鼻,無咎', '噬腊肉,遇毒,小吝,無咎', '噬乾胏,得金矢,利艱貞,吉', '噬乾肉,得黃金,貞厲,無咎', '何校滅耳,凶'],
+            '24': ['鼎顛趾,利出否,得妾以其子,無咎', '鼎有實,我仇有疾,不我能即,吉', '鼎耳革,其行塞,雉膏不食,方雨虧悔,終吉', '鼎折足,覆公餗,其形渥,凶', '鼎黃耳金鉉,利貞', '鼎玉鉉,大吉,無不利'],
+            '25': ['濡其尾,吝', '曳其輪,貞吉', '未濟,征凶,利涉大川', '貞吉,悔亡,震用伐鬼方,三年有賞于大國', '貞吉,無悔,君子之光,有孚,吉', '有孚于飲酒,無咎,濡其首,有孚失是'],
+            '26': ['旅瑣瑣,斯其所取災', '旅即次,懷其資,得童僕貞', '旅焚其次,喪其童僕,貞厲', '旅于處,得其資斧,我心不快', '射雉一矢亡,終以譽命', '鳥焚其巢,旅人先笑後號咷,喪牛于易,凶'],
+            '27': ['晉如摧如,貞吉,罔孚裕,無咎', '晉如愁如,貞吉,受茲介福于其王母', '眾允,悔亡', '晉如鼫鼠,貞厲', '悔亡,失得勿恤,往吉,無不利', '晉其角,維用伐邑,厲吉,無咎,貞吝'],
+            '30': ['壯于趾,征凶,有孚', '貞吉', '小人用壯,君子用罔,貞厲,羝羊觸藩,羸其角', '貞吉,悔亡,藩決不羸,壯于大輿之輹', '喪羊于易,無悔', '羝羊觸藩,不能退,不能遂,無攸利,艱則吉'],
+            '31': ['歸妹以娣,跛能履,征吉', '眇能視,利幽人之貞', '歸妹以須,反歸以娣', '歸妹愆期,遲歸有時', '帝乙歸妹,其君之袂不如其娣之袂良,月幾望,吉', '女承筐無實,士刲羊無血,無攸利'],
+            '32': ['遇其配主,雖旬無咎,往有尚', '豐其蔀,日中見斗,往得疑疾,有孚發若,吉', '豐其沛,日中見沫,折其右肱,無咎', '豐其蔀,日中見斗,遇其夷主,吉', '來章,有慶譽,吉', '豐其屋,蔀其家,闚其戶,闃其無人,三歲不覿,凶'],
+            '33': ['震來虩虩,後笑言啞啞,吉', '震來厲,億喪貝,躋于九陵,勿逐,七日得', '震蘇蘇,震行無眚', '震遂泥', '震往來厲,意無喪有事', '震索索,視矍矍,征凶,震不于其躬,于其鄰,無咎'],
+            '34': ['浚恆,貞凶,無攸利', '悔亡', '不恆其德,或承之羞,貞吝', '田無禽', '恆其德貞,婦人吉,夫子凶', '振恆,凶'],
+            '35': ['無咎', '田獲三狐,得黃矢,貞吉', '負且乘,致寇至,貞吝', '解而拇,朋至斯孚', '君子維有解,吉,有孚于小人', '公用射隼于高墉之上,獲之,無不利'],
+            '36': ['飛鳥以凶', '過其祖,遇其妣,不及其君,遇其臣,無咎', '弗過防之,從或戕之,凶', '無咎,弗過遇之,往厲必戒,勿用永貞', '密雲不雨,自我西郊,公弋取彼在穴', '弗遇過之,飛鳥離之,凶,是謂災眚'],
+            '37': ['閑有家,悔亡', '無攸遂,在中饋,貞吉', '家人嗃嗃,悔厲吉,婦子嘻嘻,終吝', '富家,大吉', '王假有家,勿恤,往吉', '有孚威如,終吉'],
+            '40': ['繫于金柅,貞吉,有攸往見凶,羸豕孚蹢躅', '包有魚,無咎,不利賓', '臀無膚,其行次且,厲,無大咎', '包無魚,起凶', '以杞包瓜,含章,有隕自天', '姤其角,吝,無咎'],
+            '41': ['有孚盈缶,終來有它,吉', '鳴鶴在陰,其子和之,我有好爵,吾與爾靡之', '得敵,或鼓或罷,或泣或歌', '月幾望,馬匹亡,無咎', '有孚攣如,無咎', '翰音登于天,貞凶'],
+            '42': ['無攸遂,在中饋,貞吉', '殺家之蠱,勿用取女', '家人嗃嗃,悔厲吉,婦子嘻嘻,終吝', '富家,大吉', '王假有家,勿恤,往吉', '有孚威如,終吉'],
+            '43': ['損益盈虛,與時偕行', '利用為大作,元吉,無咎', '三人行則損一人,一人行則得其友', '損其疾,使遄有喜,無咎', '或益之十朋之龜,弗克違,元吉', '弗損益之,無咎,貞吉,利有攸往,得臣無家'],
+            '44': ['鞏用黃牛之革', '巽在床下,用史巫紛若,吉,無咎', '頻巽,吝', '悔亡,田獲三品', '貞吉,悔亡,無不利,無初有終,先庚三日,後庚三日,吉', '巽在床下,喪其資斧,貞凶'],
+            '45': ['用拯馬壯,吉', '渙奔其機,悔亡', '渙其躬,無悔', '渙其群,元吉,渙有丘,匪夷所思', '渙汗其大號,渙王居,無咎', '渙其血,去逖出,無咎'],
+            '46': ['鴻漸于干,小子厲,有言,無咎', '鴻漸于磐,飲食衎衎,吉', '鴻漸于陸,夫征不復,婦孕不育,凶,利禦寇', '鴻漸于木,或得其桷,無咎', '鴻漸于陵,婦三歲不孕,終莫之勝,吉', '鴻漸于陸,其羽可用為儀,吉'],
+            '47': ['履霜,堅冰至', '直方大,不習無不利', '含章可貞,或從王事,無成有終', '括囊,無咎無譽', '黃裳,元吉', '龍戰于野,其血玄黃'],
+            '50': ['需于郊,利用恆,無咎', '需于沙,小有言,終吉', '需于泥,致寇至', '需于血,出自穴', '需于酒食,貞吉', '入于穴,有不速之客三人來,敬之終吉'],
+            '51': ['不出戶庭,無咎', '不出門庭,凶', '節若嗟若,無咎', '安節,亨', '甘節,吉,往有尚', '苦節,貞凶,悔亡'],
+            '52': ['未濟,征凶,利涉大川', '曳其輪,貞吉', '既濟,初吉終亂', '繻有衣袽,終日戒', '東鄰殺牛,不如西鄰之禴祭,實受其福', '濡其首,厲'],
+            '53': ['磐桓,利居貞,利建侯', '屯如邅如,乘馬班如,匪寇婚媾,女子貞不字,十年乃字', '即鹿無虞,惟入于林中,君子幾不如舍,往吝', '乘馬班如,求婚媾,往吉,無不利', '屯其膏,小貞吉,大貞凶', '乘馬班如,泣血漣如'],
+            '54': ['井泥不食,舊井無禽', '井谷射鮒,甕敝漏', '井渫不食,為我心惻,可用汲,王明並受其福', '井甃,無咎', '井冽,寒泉食', '井收勿幕,有孚,元吉'],
+            '55': ['習坎,有孚,維心亨,行有尚', '坎有險,求小得', '來之坎坎,險且枕,入于坎窞,勿用', '樽酒簋貳,用缶,納約自牖,終無咎', '坎不盈,祗既平,無咎', '係用徽纆,寘于叢棘,三歲不得,凶'],
+            '56': ['蹇,利西南,不利東北,利見大人,貞吉', '往蹇來譽', '往蹇來反', '往蹇來連', '大蹇朋來', '往蹇來碩,吉,利見大人'],
+            '57': ['比之初六,有孚比之,無咎,有孚盈缶,終來有它吉', '比之自內,貞吉', '比之匪人', '外比之,貞吉', '顯比,王用三驅,失前禽,邑人不誡,吉', '比之無首,凶'],
+            '60': ['大畜,利貞,不家食吉,利涉大川', '輿說輹', '良馬逐,利艱貞,曰閑輿衛,利有攸往', '童牛之牿,元吉', '豶豕之牙,吉', '何天之衢,亨'],
+            '61': ['損,有孚,元吉,無咎,可貞,利有攸往', '利貞,征凶,弗損益之', '三人行則損一人,一人行則得其友', '損其疾,使遄有喜,無咎', '或益之十朋之龜,弗克違,元吉', '弗損益之,無咎,貞吉,利有攸往,得臣無家'],
+            '62': ['賁如皤如,白馬翰如,匪寇婚媾', '賁其須', '賁如濡如,永貞吉', '賁如皤如,白馬翰如,匪寇婚媾', '賁于丘園,束帛戔戔,吝,終吉', '白賁,無咎'],
+            '63': ['由頤,厲吉,觀頤,自求口實', '顛頤,拂經于丘頤,征凶', '拂頤,貞凶,十年勿用,無攸利', '顛頤,吉,虎視眈眈,其欲逐逐,無咎', '拂經,居貞吉,不可涉大川', '由頤,厲吉,利涉大川'],
+            '64': ['幹父之蠱,有子考,無咎,厲終吉', '幹母之蠱,不可貞', '幹父之蠱,小有悔,無大咎', '裕父之蠱,往見吝', '幹父之蠱,用譽', '不事王侯,高尚其事'],
+            '65': ['蒙,亨,匪我求童蒙,童蒙求我', '包蒙,吉,納婦吉,子克家', '勿用取女,見金夫,不有躬,無攸利', '困蒙,吝', '童蒙,吉', '擊蒙,不利為寇,利禦寇'],
+            '66': ['艮其趾,無咎,利永貞', '艮其腓,不拯其隨,其心不快', '艮其限,列其夤,厲薰心', '艮其身,無咎', '艮其輔,言有序,悔亡', '敦艮,吉'],
+            '67': ['剝床以足,蔑貞凶', '剝床以辨,蔑貞凶', '剝之,無咎', '剝床以膚,凶', '貫魚以寵,無不利', '碩果不食,君子得輿,小人剝廬'],
+            '70': ['拔茅茹以其彙,征吉', '包荒,用馮河,不遐遺,朋亡,得尚于中行', '無平不陂,無往不復,艱貞無咎,勿恤其孚,于食有福', '翩翩,不富以其鄰,不戒以孚', '帝乙歸妹,以祉元吉', '城復于隍,勿用師,自邑告命,貞吝'],
+            '71': ['咸臨,貞吉', '咸臨,吉,無不利', '甘臨,無攸利,既憂之,無咎', '至臨,無咎', '知臨,大君之宜,吉', '敦臨,吉,無咎'],
+            '72': ['明夷于飛,垂其翼,君子于行,三日不食', '明夷,夷于左股,用拯馬壯,吉', '明夷于南狩,得其大首,不可疾,貞', '入于左腹,獲明夷之心,于出門庭', '箕子之明夷,利貞', '不明晦,初登于天,後入于地'],
+            '73': ['不遠復,無祗悔,元吉', '休復,吉', '頻復,厲,無咎', '中行獨復', '敦復,無悔', '迷復,凶,有災眚,用行師,終有大敗'],
+            '74': ['允升,大吉', '孚乃利用禴,無咎', '升虛邑', '王用亨于岐山,吉,無咎', '貞吉,升階', '冥升,利于不息之貞'],
+            '75': ['師出以律,否臧凶', '在師中,吉,無咎,王三錫命', '師或輿尸,凶', '師左次,無咎', '田有禽,利執言,無咎,長子帥師,弟子輿尸,貞凶', '大君有命,開國承家,小人勿用'],
+            '76': ['謙謙君子,用涉大川,吉', '鳴謙,貞吉', '勞謙,君子有終,吉', '無不利,撝謙', '不富以其鄰,利用侵伐,無不利', '鳴謙,利用行師,征邑國'],
+            '77': ['履霜,堅冰至', '直方大,不習無不利', '含章可貞,或從王事,無成有終', '括囊,無咎無譽', '黃裳,元吉', '龍戰于野,其血玄黃']
+        };
+
+        // 爻辭解釋數據庫(精簡版 - 通用解釋)
+        const yaoExplainGeneral = {
+            '上爻': {
+                stage: '反思期',
+                position: '最高位',
+                meaning: '事物發展到極點，物極必反的階段',
+                advice: '功成身退，適時收斂，避免過度發展'
+            },
+            '五爻': {
+                stage: '巔峰期',
+                position: '尊位',
+                meaning: '處於最佳位置，能發揮最大影響力',
+                advice: '把握機會，展現才能，但需謙虛謹慎'
+            },
+            '四爻': {
+                stage: '轉折期',
+                position: '近君之位',
+                meaning: '接近權力中心，機遇與風險並存',
+                advice: '審慎行事，把握分寸，避免鋒芒畢露'
+            },
+            '三爻': {
+                stage: '努力期',
+                position: '下卦之上',
+                meaning: '承上啟下，需要努力向上的階段',
+                advice: '勤勉不懈，穩紮穩打，保持警惕'
+            },
+            '二爻': {
+                stage: '初現期',
+                position: '中位',
+                meaning: '開始嶄露頭角，逐漸站穩腳步',
+                advice: '謹慎行事，尋求貴人，建立根基'
+            },
+            '初爻': {
+                stage: '潛藏期',
+                position: '最低位',
+                meaning: '事物剛開始，時機尚未成熟',
+                advice: '韜光養晦，積蓄實力，等待時機'
+            }
+        };
+
+        // 根據爻位和吉凶給出詳細建議
+        function getYaoExplanation(yaoIndex, yaoText) {
+            const yaoNames = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'];
+            const yaoName = yaoNames[yaoIndex];
+            const yaoInfo = yaoExplainGeneral[yaoName];
+            
+            // 基礎解釋
+            let explanation = `<strong>【爻位分析】</strong><br>`;
+            explanation += `位階：${yaoInfo.position}（${yaoInfo.stage}）<br>`;
+            explanation += `意義：${yaoInfo.meaning}<br>`;
+            explanation += `建議：${yaoInfo.advice}<br><br>`;
+            
+            // 根據爻辭內容判斷吉凶，給出詳細分析
+            explanation += `<strong>【吉凶判斷】</strong><br>`;
+            
+            if (yaoText.includes('吉') && !yaoText.includes('凶')) {
+                explanation += `<span style="color: #90EE90;">◆ 大吉之象</span><br>`;
+                explanation += `當前形勢非常有利，是採取積極行動的好時機。`;
+                explanation += `然而仍需謹守正道，不可因順利而放縱。`;
+                explanation += `建議把握機會但保持謙遜，這樣才能長久獲益。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✓ 可以大膽推進計劃<br>`;
+                explanation += `✓ 適合開創新局面<br>`;
+                explanation += `✓ 但要注意不可過於激進<br>`;
+                explanation += `✓ 保持正直的態度`;
+                
+            } else if (yaoText.includes('凶')) {
+                explanation += `<span style="color: #FFB6C1;">◆ 凶險之象</span><br>`;
+                explanation += `當前處境不利，需要特別謹慎小心。`;
+                explanation += `這是考驗的時期，宜採取保守策略，避免冒進。`;
+                explanation += `建議暫緩重大決策，等待更好的時機。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✗ 不宜貿然行動<br>`;
+                explanation += `✓ 應該謹慎觀察形勢<br>`;
+                explanation += `✓ 可以準備和規劃<br>`;
+                explanation += `✓ 保持低調等待轉機`;
+                
+            } else if (yaoText.includes('無咎')) {
+                explanation += `<span style="color: #87CEEB;">◆ 無咎之象</span><br>`;
+                explanation += `雖然過程中可能有波折和困難，但最終不會有大的過失。`;
+                explanation += `這是一個需要堅持的階段，保持中正之道就能平安度過。`;
+                explanation += `建議穩健行事，不偏不倚，就能避免災禍。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✓ 保持現有方向<br>`;
+                explanation += `✓ 堅守原則不動搖<br>`;
+                explanation += `✓ 遇到困難不退縮<br>`;
+                explanation += `✓ 用中庸之道處事`;
+                
+            } else if (yaoText.includes('厲') || yaoText.includes('危')) {
+                explanation += `<span style="color: #FFA07A;">◆ 危厲之象</span><br>`;
+                explanation += `處境艱難危險，稍有不慎就可能招致禍患。`;
+                explanation += `這是最需要謹慎的時刻，必須格外小心，三思而後行。`;
+                explanation += `建議暫時守成，不要有大的變動，等待危機過去。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✗ 絕不可輕舉妄動<br>`;
+                explanation += `✓ 需要步步為營<br>`;
+                explanation += `✓ 多聽取他人意見<br>`;
+                explanation += `✓ 以守為攻等待時機`;
+                
+            } else if (yaoText.includes('利')) {
+                explanation += `<span style="color: #F0E68C;">◆ 有利之象</span><br>`;
+                explanation += `當前情況對你有利，有獲益的機會。`;
+                explanation += `但需要把握好方向和分寸，不可貪求過度。`;
+                explanation += `建議積極進取但要適可而止，這樣才能真正獲利。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✓ 可以適度進取<br>`;
+                explanation += `✓ 把握有利時機<br>`;
+                explanation += `✓ 但要見好就收<br>`;
+                explanation += `✓ 切忌貪心過度`;
+                
+            } else {
+                explanation += `<span style="color: #DDA0DD;">◆ 平穩之象</span><br>`;
+                explanation += `目前處於相對平穩的狀態，沒有特別的吉凶。`;
+                explanation += `這時最重要的是保持平常心，順勢而為。`;
+                explanation += `建議不急不躁，按部就班，自然能有好的結果。<br><br>`;
+                
+                explanation += `<strong>【行動指引】</strong><br>`;
+                explanation += `✓ 保持穩定節奏<br>`;
+                explanation += `✓ 順應自然發展<br>`;
+                explanation += `✓ 不要急於求成<br>`;
+                explanation += `✓ 耐心等待機緣`;
+            }
+            
+            return explanation;
+        }
+
+        let wheel = document.querySelector('.wheel');
+        let inner = document.querySelector('.inner');
+        let inner2 = document.querySelector('.inner2');
+        let outter = document.querySelector('.outter');
+        let outter2 = document.querySelector('.outter2');
+        let outter3 = document.querySelector('.outter3');
+        let spinBtn = document.querySelector('.spinBtn');
+        let result = document.getElementById('result');
+
+        // 六爻符號陣列 (帶*表示動爻)
+        const segments_up = ['⚋*', '⚋', '⚊', '⚊*', '⚊', '⚋'];
+        const segments_five = ['⚋', '⚊', '⚊*', '⚊', '⚋', '⚋*'];
+        const segments_four = ['⚊', '⚊*', '⚊', '⚋', '⚋*', '⚋'];
+        const segments_three = ['⚊*', '⚊', '⚋', '⚋*', '⚋', '⚊'];
+        const segments_two = ['⚊', '⚋', '⚋*', '⚋', '⚊', '⚊*'];
+        const segments_first = ['⚋', '⚋*', '⚋', '⚊', '⚊*', '⚊'];
+
+        // 八卦映射
+        const segmentsMap = {
+            "111": ["☰", 0],
+            "011": ["☱", 1],
+            "101": ["☲", 2],
+            "001": ["☳", 3],
+            "110": ["☴", 4],
+            "010": ["☵", 5],
+            "100": ["☶", 6],
+            "000": ["☷", 7]
+        };
+
+        // 64卦映射
+        const guaMap = {
+            '00': '䷀ 乾卦-乾為天',
+            '01': '䷉ 履卦-天澤履',
+            '02': '䷌ 同人卦-天火同人',
+            '03': '䷘ 無妄卦-天雷無妄',
+            '04': '䷫ 姤卦-天風姤',
+            '05': '䷅ 訟卦-天水訟',
+            '06': '䷠ 遯卦-天山遯',
+            '07': '䷋ 否卦-天地否',
+            '10': '䷪ 夬卦-澤天夬',
+            '11': '䷹ 兌卦-兌為澤',
+            '12': '䷰ 革卦-澤火革',
+            '13': '䷐ 隨卦-澤雷隨',
+            '14': '䷛ 大過卦-澤風大過',
+            '15': '䷮ 困卦-澤水困',
+            '16': '䷞ 咸卦-澤山咸',
+            '17': '䷬ 萃卦-澤地萃',
+            '20': '䷍ 大有卦-火天大有',
+            '21': '䷥ 睽卦-火澤睽',
+            '22': '䷝ 離卦-離為火',
+            '23': '䷔ 噬嗑卦-火雷噬嗑',
+            '24': '䷱ 鼎卦-火風鼎',
+            '25': '䷿ 未濟卦-火水未濟',
+            '26': '䷷ 旅卦-火山旅',
+            '27': '䷢ 晉卦-火地晉',
+            '30': '䷡ 大壯卦-雷天大壯',
+            '31': '䷵ 歸妹卦-雷澤歸妹',
+            '32': '䷶ 豐卦-雷火豐',
+            '33': '䷲ 震卦-震為雷',
+            '34': '䷟ 恆卦-雷風恆',
+            '35': '䷧ 解卦-雷水解',
+            '36': '䷽ 小過卦-雷山小過',
+            '37': '䷏ 豫卦-雷地豫',
+            '40': '䷈ 小畜卦-風天小畜',
+            '41': '䷼ 中孚卦-風澤中孚',
+            '42': '䷤ 家人卦-風火家人',
+            '43': '䷩ 益卦-風雷益',
+            '44': '䷸ 巽卦-巽為風',
+            '45': '䷺ 渙卦-風水渙',
+            '46': '䷴ 漸卦-風山漸',
+            '47': '䷓ 觀卦-風地觀',
+            '50': '䷄ 需卦-水天需',
+            '51': '䷻ 節卦-水澤節',
+            '52': '䷾ 既濟卦-水火既濟',
+            '53': '䷂ 屯卦-水雷屯',
+            '54': '䷯ 井卦-水風井',
+            '55': '䷜ 坎卦-坎為水',
+            '56': '䷦ 蹇卦-水山蹇',
+            '57': '䷇ 比卦-水地比',
+            '60': '䷙ 大畜卦-山天大畜',
+            '61': '䷨ 損卦-山澤損',
+            '62': '䷕ 賁卦-山火賁',
+            '63': '䷚ 頤卦-山雷頤',
+            '64': '䷑ 蠱卦-山風蠱',
+            '65': '䷃ 蒙卦-山水蒙',
+            '66': '䷳ 艮卦-艮為山',
+            '67': '䷖ 剝卦-山地剝',
+            '70': '䷊ 泰卦-地天泰',
+            '71': '䷒ 臨卦-地澤臨',
+            '72': '䷣ 明夷卦-地火明夷',
+            '73': '䷗ 復卦-地雷復',
+            '74': '䷭ 升卦-地風升',
+            '75': '䷆ 師卦-地水師',
+            '76': '䷎ 謙卦-地山謙',
+            '77': '䷁ 坤卦-坤為地'
+        };
+
+        // 旋轉累積變數
+        let currentRotation_outside = 0;
+        let currentRotation_outside3 = 0;
+        let currentRotation_outside2 = 0;
+        let currentRotation_outside1 = 0;
+        let currentRotation_inside = 0;
+        let currentRotation_inside2 = 0;
+        let statusFlag = false;
+
+        // 計算變卦(之卦)
+        function calculateZhiGua(originalYaos, dongYaoIndexes) {
+            let zhiYaos = [...originalYaos];
+            dongYaoIndexes.forEach(index => {
+                // 陰陽互變
+                zhiYaos[index] = zhiYaos[index] === '⚊' ? '⚋' : '⚊';
+            });
+            
+            // 計算變卦的上下卦
+            let upGua = '';
+            let downGua = '';
+            for (let i = 0; i < 3; i++) {
+                upGua += (zhiYaos[i] === '⚊') ? '1' : '0';
+                downGua += (zhiYaos[i + 3] === '⚊') ? '1' : '0';
+            }
+            
+            let upGuaSymbol = segmentsMap[upGua];
+            let downGuaSymbol = segmentsMap[downGua];
+            let key = upGuaSymbol[1].toString() + downGuaSymbol[1].toString();
+            
+            return {
+                name: guaMap[key],
+                upGua: upGuaSymbol[0],
+                downGua: downGuaSymbol[0],
+                yaos: zhiYaos
+            };
+        }
+
+        // 根據動爻數量判斷占法
+        function getInterpretation(dongYaoCount, dongYaoIndexes, benGuaKey, zhiGuaKey, yaos) {
+            let interpretation = '';
+            // 爻名陣列:索引0=上爻, 索引1=五爻, ..., 索引5=初爻
+            let yaoNames = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'];
+            
+            if (dongYaoCount === 0) {
+                interpretation = '無動爻,以本卦卦辭占';
+            } else if (dongYaoCount === 1) {
+                let yaoIndex = dongYaoIndexes[0];
+                let yaoName = yaoNames[yaoIndex];
+                interpretation = `一爻變,本卦 <span class="highlight">${yaoName}</span> 爻辭占`;
+            } else if (dongYaoCount === 2) {
+                // 二爻變,取位階高的（索引小的）
+                let yaoIndex = Math.min(...dongYaoIndexes);
+                let yaoName = yaoNames[yaoIndex];
+                interpretation = `二爻變,本卦上變爻(<span class="highlight">${yaoName}</span>)爻辭占`;
+            } else if (dongYaoCount === 3) {
+                interpretation = `三爻變,本卦之卦卦辭合占`;
+            } else if (dongYaoCount === 4) {
+                // 四爻變,找出不變的兩爻中位階較低的（索引較大的）
+                let buBianYaos = [0,1,2,3,4,5].filter(i => !dongYaoIndexes.includes(i));
+                let yaoIndex = Math.max(...buBianYaos);
+                let yaoName = yaoNames[yaoIndex];
+                interpretation = `四爻變,之卦下不變爻(<span class="highlight">${yaoName}</span>)爻辭占`;
+            } else if (dongYaoCount === 5) {
+                let buBianYao = [0,1,2,3,4,5].find(i => !dongYaoIndexes.includes(i));
+                let yaoName = yaoNames[buBianYao];
+                interpretation = `五爻變,之卦不變爻(<span class="highlight">${yaoName}</span>)爻辭占`;
+            } else if (dongYaoCount === 6) {
+                interpretation = `六爻變,以之卦卦辭占`;
+            }
+            
+            return interpretation;
+        }
+
+        spinBtn.onclick = function() {
+            spinBtn.style.pointerEvents = 'none';
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            if (statusFlag) {
+                // 重置
+                wheel.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                inner.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                inner2.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                outter.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                outter2.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                outter3.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                currentRotation_outside = 0;
+                currentRotation_outside3 = 0;
+                currentRotation_outside2 = 0;
+                currentRotation_outside1 = 0;
+                currentRotation_inside = 0;
+                currentRotation_inside2 = 0;
+                statusFlag = false;
+                
+                // 顯示Loading動畫
+                spinBtn.classList.add('loading');
+                spinBtn.style.opacity = '0.3';
+                spinBtn.innerHTML = '';  // 清空文字
+                loadingSpinner.classList.add('active');
+                result.innerHTML = "無結果";
+                
+                setTimeout(() => {
+                    spinBtn.style.pointerEvents = 'auto';
+                    spinBtn.classList.remove('loading');
+                    spinBtn.style.opacity = '1';
+                    spinBtn.innerHTML = '問';  // 恢復文字
+                    loadingSpinner.classList.remove('active');
+                }, 10000);
+                
+            } else {
+                // 開始占卜
+                let value1 = Math.ceil(Math.random() * -3600);
+                let value2 = Math.ceil(Math.random() * -3600);
+                let value3 = Math.ceil(Math.random() * -3600);
+                let value4 = Math.ceil(Math.random() * -3600);
+                let value5 = Math.ceil(Math.random() * -3600);
+                let value6 = Math.ceil(Math.random() * -3600);
+
+                wheel.style.transform = `translate(-50%, -50%) rotate(${value1}deg)`;
+                inner.style.transform = `translate(-50%, -50%) rotate(${value2}deg)`;
+                inner2.style.transform = `translate(-50%, -50%) rotate(${value3}deg)`;
+                outter.style.transform = `translate(-50%, -50%) rotate(${value4}deg)`;
+                outter2.style.transform = `translate(-50%, -50%) rotate(${value5}deg)`;
+                outter3.style.transform = `translate(-50%, -50%) rotate(${value6}deg)`;
+
+                currentRotation_outside += value1 * (-1);
+                currentRotation_inside += value2 * (-1);
+                currentRotation_inside2 += value3 * (-1);
+                currentRotation_outside1 += value4 * (-1);
+                currentRotation_outside2 += value5 * (-1);
+                currentRotation_outside3 += value6 * (-1);
+                
+                statusFlag = true;
+                
+                // 顯示Loading動畫
+                spinBtn.classList.add('loading');
+                spinBtn.style.opacity = '0.3';
+                spinBtn.innerHTML = '';  // 清空文字
+                loadingSpinner.classList.add('active');
+
+                setTimeout(() => {
+                    // 計算六爻
+                    let yaosRaw = [];
+                    let yaosClean = [];
+                    let dongYaoIndexes = [];
+                    let upGua = '';
+                    let downGua = '';
+                    
+                    // 上爻
+                    let normalized_outside = currentRotation_outside % 360;
+                    let index_outside = Math.floor(normalized_outside / 60);
+                    let yao_up = segments_up[index_outside];
+                    yaosRaw.push(yao_up);
+                    if (yao_up.includes("*")) dongYaoIndexes.push(0);
+                    yaosClean.push(yao_up.replace('*', ''));
+                    upGua += (yao_up.includes("⚊")) ? "1" : "0";
+                    
+                    // 五爻
+                    let normalized_outside3 = currentRotation_outside3 % 360;
+                    let index_outside3 = Math.floor(normalized_outside3 / 60);
+                    let yao_five = segments_five[index_outside3];
+                    yaosRaw.push(yao_five);
+                    if (yao_five.includes("*")) dongYaoIndexes.push(1);
+                    yaosClean.push(yao_five.replace('*', ''));
+                    upGua += (yao_five.includes("⚊")) ? "1" : "0";
+                    
+                    // 四爻
+                    let normalized_outside2 = currentRotation_outside2 % 360;
+                    let index_outside2 = Math.floor(normalized_outside2 / 60);
+                    let yao_four = segments_four[index_outside2];
+                    yaosRaw.push(yao_four);
+                    if (yao_four.includes("*")) dongYaoIndexes.push(2);
+                    yaosClean.push(yao_four.replace('*', ''));
+                    upGua += (yao_four.includes("⚊")) ? "1" : "0";
+                    
+                    // 三爻
+                    let normalized_outside1 = currentRotation_outside1 % 360;
+                    let index_outside1 = Math.floor(normalized_outside1 / 60);
+                    let yao_three = segments_three[index_outside1];
+                    yaosRaw.push(yao_three);
+                    if (yao_three.includes("*")) dongYaoIndexes.push(3);
+                    yaosClean.push(yao_three.replace('*', ''));
+                    downGua += (yao_three.includes("⚊")) ? "1" : "0";
+                    
+                    // 二爻
+                    let normalized_inside = currentRotation_inside % 360;
+                    let index_inside = Math.floor(normalized_inside / 60);
+                    let yao_two = segments_two[index_inside];
+                    yaosRaw.push(yao_two);
+                    if (yao_two.includes("*")) dongYaoIndexes.push(4);
+                    yaosClean.push(yao_two.replace('*', ''));
+                    downGua += (yao_two.includes("⚊")) ? "1" : "0";
+                    
+                    // 初爻
+                    let normalized_inside2 = currentRotation_inside2 % 360;
+                    let index_inside2 = Math.floor(normalized_inside2 / 60);
+                    let yao_first = segments_first[index_inside2];
+                    yaosRaw.push(yao_first);
+                    if (yao_first.includes("*")) dongYaoIndexes.push(5);
+                    yaosClean.push(yao_first.replace('*', ''));
+                    downGua += (yao_first.includes("⚊")) ? "1" : "0";
+                    
+                    // 獲取本卦
+                    let upGuaSymbolMap = segmentsMap[upGua];
+                    let downGuaSymbolMap = segmentsMap[downGua];
+                    let benGuaKey = upGuaSymbolMap[1].toString() + downGuaSymbolMap[1].toString();
+                    let benGuaName = guaMap[benGuaKey];
+                    
+                    // 計算變卦
+                    let zhiGua = null;
+                    let zhiGuaKey = null;
+                    if (dongYaoIndexes.length > 0) {
+                        zhiGua = calculateZhiGua(yaosClean, dongYaoIndexes);
+                        let zhiUpSymbol = segmentsMap[zhiGua.upGua.split('').map(c => c === '⚊' ? '1' : '0').join('')];
+                        let zhiDownSymbol = segmentsMap[zhiGua.downGua.split('').map(c => c === '⚊' ? '1' : '0').join('')];
+                        // 重新計算正確的之卦
+                        let zhiUpGua = '';
+                        let zhiDownGua = '';
+                        for (let i = 0; i < 3; i++) {
+                            zhiUpGua += (zhiGua.yaos[i] === '⚊') ? '1' : '0';
+                            zhiDownGua += (zhiGua.yaos[i + 3] === '⚊') ? '1' : '0';
+                        }
+                        let zhiUpSymbol2 = segmentsMap[zhiUpGua];
+                        let zhiDownSymbol2 = segmentsMap[zhiDownGua];
+                        zhiGuaKey = zhiUpSymbol2[1].toString() + zhiDownSymbol2[1].toString();
+                        zhiGua.name = guaMap[zhiGuaKey];
+                        zhiGua.upGua = zhiUpSymbol2[0];
+                        zhiGua.downGua = zhiDownSymbol2[0];
+                    }
+                    
+                    // 獲取占法說明
+                    let interpretation = getInterpretation(dongYaoIndexes.length, dongYaoIndexes, benGuaKey, zhiGuaKey, yaosClean);
+                    
+                    // 獲取應該顯示的爻辭 - 根據占法判斷
+                    let yaoWords = '';
+                    let yaoExplain = '';
+                    
+                    if (dongYaoIndexes.length === 0) {
+                        // 無動爻,顯示本卦卦辭
+                        yaoWords = '以本卦卦辭占';
+                        yaoExplain = '無動爻時,應參照本卦卦辭的整體含義來判斷吉凶。';
+                    } else if (dongYaoIndexes.length === 1) {
+                        // 一爻變,顯示本卦變爻爻辭
+                        let yaoIndex = dongYaoIndexes[0];
+                        let yaoName = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'][yaoIndex];
+                        let yaoText = guaYaoData[benGuaKey][yaoIndex];
+                        yaoWords = `<span class="highlight">${yaoName}</span>: ${yaoText}`;
+                        yaoExplain = getYaoExplanation(yaoIndex, yaoText);
+                    } else if (dongYaoIndexes.length === 2) {
+                        // 二爻變,顯示本卦上變爻爻辭（位階高的）
+                        // 索引: 0=上爻, 1=五爻, 2=四爻, 3=三爻, 4=二爻, 5=初爻
+                        // 索引越小，位階越高
+                        let yaoIndex = Math.min(...dongYaoIndexes);
+                        let yaoName = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'][yaoIndex];
+                        let yaoText = guaYaoData[benGuaKey][yaoIndex];
+                        yaoWords = `<span class="highlight">${yaoName}</span>: ${yaoText}`;
+                        yaoExplain = getYaoExplanation(yaoIndex, yaoText) + ' (二爻變時,以位階較高的動爻為主要參考)';
+                    } else if (dongYaoIndexes.length === 3) {
+                        // 三爻變,本卦之卦卦辭合占
+                        yaoWords = '本卦與之卦卦辭合參';
+                        yaoExplain = '三爻變時,需綜合本卦與之卦的卦辭來判斷。變化較大,宜從兩個角度審視。';
+                    } else if (dongYaoIndexes.length === 4) {
+                        // 四爻變,之卦下不變爻爻辭（位階低的）
+                        // 索引: 0=上爻, 1=五爻, 2=四爻, 3=三爻, 4=二爻, 5=初爻
+                        // 索引越大，位階越低
+                        let buBianYaos = [0,1,2,3,4,5].filter(i => !dongYaoIndexes.includes(i));
+                        let yaoIndex = Math.max(...buBianYaos);
+                        let yaoName = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'][yaoIndex];
+                        let yaoText = guaYaoData[zhiGuaKey][yaoIndex];
+                        yaoWords = `<span class="highlight">${yaoName}</span>: ${yaoText}`;
+                        yaoExplain = getYaoExplanation(yaoIndex, yaoText) + ' (四爻變時,以之卦中位階較低的不變爻為準)';
+                    } else if (dongYaoIndexes.length === 5) {
+                        // 五爻變,之卦不變爻爻辭
+                        let buBianYao = [0,1,2,3,4,5].find(i => !dongYaoIndexes.includes(i));
+                        let yaoName = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'][buBianYao];
+                        let yaoText = guaYaoData[zhiGuaKey][buBianYao];
+                        yaoWords = `<span class="highlight">${yaoName}</span>: ${yaoText}`;
+                        yaoExplain = getYaoExplanation(buBianYao, yaoText) + ' (五爻變時,唯一不變的爻最為重要)';
+                    } else if (dongYaoIndexes.length === 6) {
+                        // 六爻變,以之卦卦辭占
+                        yaoWords = '以之卦卦辭占';
+                        yaoExplain = '六爻皆變時,表示全面轉化,應以之卦的整體卦義來判斷未來走向。';
+                    }
+                    
+                    // 組織結果顯示
+                    let resultHTML = '<h3>[ 卜卦結果 ]</h3>';
+                    
+                    // 本卦
+                    resultHTML += '<div class="result-section">';
+                    resultHTML += '<h4>📖 本卦</h4>';
+                    resultHTML += `<p><span class="highlight">${benGuaName}</span></p>`;
+                    resultHTML += `<p>上卦: ${upGuaSymbolMap[0]} · 下卦: ${downGuaSymbolMap[0]}</p>`;
+                    
+                    // 添加卦辭
+                    if (guaCi[benGuaKey]) {
+                        resultHTML += `<p style="margin-top: 10px; color: #FFD700;">⭐ 卦辭: ${guaCi[benGuaKey].ci}</p>`;
+                        resultHTML += `<p style="color: #fda085; font-size: 0.95em;">💬 ${guaCi[benGuaKey].explain}</p>`;
+                    }
+                    
+                    // 添加本卦完整六爻
+                    resultHTML += '<div style="margin-top: 15px; padding: 10px; background: rgba(57, 255, 226, 0.05); border-left: 3px solid var(--basic_color); border-radius: 5px;">';
+                    resultHTML += '<p style="color: var(--basic_color); font-weight: bold; margin-bottom: 8px;">📜 本卦爻辭:</p>';
+                    let yaoNames = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'];
+                    for (let i = 0; i < 6; i++) {
+                        let isDong = dongYaoIndexes.includes(i);
+                        let yaoStyle = isDong ? 'color: #FFD700; font-weight: bold;' : 'color: #ccc;';
+                        resultHTML += `<p style="${yaoStyle} font-size: 0.9em; margin: 5px 0;">${yaoNames[i]}: ${guaYaoData[benGuaKey][i]}</p>`;
+                    }
+                    resultHTML += '</div>';
+                    resultHTML += '</div>';
+                    
+                    // 動爻
+                    if (dongYaoIndexes.length > 0) {
+                        resultHTML += '<div class="result-section">';
+                        resultHTML += '<h4>⚡ 動爻</h4>';
+                        let yaoNamesList = dongYaoIndexes.map(i => yaoNames[i]);
+                        resultHTML += `<p><span class="highlight">${yaoNamesList.join('、')}</span></p>`;
+                        
+                        // 顯示動爻的原始狀態
+                        resultHTML += '<p style="margin-top: 10px; font-size: 0.9em; color: #fda085;">動爻詳情:</p>';
+                        for (let i of dongYaoIndexes) {
+                            resultHTML += `<p style="font-size: 0.85em; color: #999; margin: 3px 0;">${yaoNames[i]}: ${yaosRaw[i]}</p>`;
+                        }
+                        resultHTML += '</div>';
+                        
+                        // 變卦(之卦)
+                        resultHTML += '<div class="result-section">';
+                        resultHTML += '<h4>🔄 之卦(變卦)</h4>';
+                        resultHTML += `<p><span class="highlight">${zhiGua.name}</span></p>`;
+                        resultHTML += `<p>上卦: ${zhiGua.upGua} · 下卦: ${zhiGua.downGua}</p>`;
+                        
+                        // 添加之卦卦辭
+                        if (guaCi[zhiGuaKey]) {
+                            resultHTML += `<p style="margin-top: 10px; color: #FFD700;">⭐ 卦辭: ${guaCi[zhiGuaKey].ci}</p>`;
+                            resultHTML += `<p style="color: #fda085; font-size: 0.95em;">💬 ${guaCi[zhiGuaKey].explain}</p>`;
+                        }
+                        
+                        // 添加之卦完整六爻
+                        resultHTML += '<div style="margin-top: 15px; padding: 10px; background: rgba(57, 255, 226, 0.05); border-left: 3px solid var(--basic_color); border-radius: 5px;">';
+                        resultHTML += '<p style="color: var(--basic_color); font-weight: bold; margin-bottom: 8px;">📜 之卦爻辭:</p>';
+                        for (let i = 0; i < 6; i++) {
+                            let isChanged = dongYaoIndexes.includes(i);
+                            let yaoStyle = isChanged ? 'color: #ccc;' : 'color: #FFD700; font-weight: bold;';
+                            resultHTML += `<p style="${yaoStyle} font-size: 0.9em; margin: 5px 0;">${yaoNames[i]}: ${guaYaoData[zhiGuaKey][i]}</p>`;
+                        }
+                        resultHTML += '</div>';
+                        resultHTML += '</div>';
+                    } else {
+                        resultHTML += '<div class="result-section">';
+                        resultHTML += '<h4>⚡ 動爻</h4>';
+                        resultHTML += '<p>無動爻</p>';
+                        resultHTML += '</div>';
+                    }
+                    
+                    // 占法判斷
+                    resultHTML += '<div class="result-section">';
+                    resultHTML += '<h4>🎯 占法</h4>';
+                    resultHTML += `<p>${interpretation}</p>`;
+                    resultHTML += '</div>';
+                    
+                    // 判斷依據的爻辭
+                    resultHTML += '<div class="result-section">';
+                    resultHTML += '<h4>📜 判斷依據</h4>';
+                    resultHTML += `<p>${yaoWords}</p>`;
+                    resultHTML += '</div>';
+                    
+                    // 爻辭解釋
+                    if (yaoExplain) {
+                        resultHTML += '<div class="result-section">';
+                        resultHTML += '<h4>💡 解釋</h4>';
+                        resultHTML += `<p style="color: #fda085; line-height: 1.9;">${yaoExplain}</p>`;
+                        resultHTML += '</div>';
+                    }
+
+                    result.innerHTML = resultHTML;
+                    
+                    // 移除Loading動畫,恢復按鈕
+                    spinBtn.style.pointerEvents = 'auto';
+                    spinBtn.classList.remove('loading');
+                    spinBtn.style.opacity = '1';
+                    loadingSpinner.classList.remove('active');
+                    spinBtn.innerHTML = '重置';
+
+                }, 10000);
+            }
+        }
+    </script>
+</body>
+</html>
